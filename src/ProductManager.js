@@ -1,7 +1,5 @@
 import fs from "fs";
 
-// -- DEFINICIÓN PRODUCT MANAGER --
-
 class ProductManager {
   constructor(path) {
     this.products = ["init"];
@@ -20,7 +18,10 @@ class ProductManager {
           (ProductManager.prodId = this.products[this.products.length - 1].id);
       } else {
         this.products = [];
-        await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+        await fs.promises.writeFile(
+          this.path,
+          JSON.stringify(this.products, null, 4)
+        );
       }
     }
   }
@@ -40,10 +41,13 @@ class ProductManager {
           this.products[this.products.length - 1].id + 1);
       prod.id = ProductManager.prodId;
       this.products.push(prod);
-      await fs.promises.writeFile(this.path, JSON.stringify(this.products));
-      console.log(`Se agregó ${prod.title}`);
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(this.products, null, 4)
+      );
+      return `Se agregó ${prod.title}`;
     } else {
-      console.log("El producto ya existe.");
+      return "El producto ya existe.";
     }
   }
 
@@ -53,11 +57,10 @@ class ProductManager {
     return this.products;
   }
 
-  async getProductById(id, showProd = true) {
+  async getProductById(id) {
     await this.initializeProducts();
 
     let prod = this.products.find((product) => product.id == id);
-    showProd && console.log(prod || "Producto no encontrado");
     return prod;
   }
 
@@ -80,10 +83,13 @@ class ProductManager {
 
       this.products[index] = prod;
 
-      await fs.promises.writeFile(this.path, JSON.stringify(this.products));
-      console.log(`Se modificó ${prod.title}`);
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(this.products, null, 4)
+      );
+      return `Se modificó ${prod.title}`;
     } else {
-      console.log("Producto no encontrado");
+      return "Producto no encontrado";
     }
   }
 
@@ -93,10 +99,13 @@ class ProductManager {
       let productsAux = this.products.filter((prod) => prod.id != id);
       this.products = productsAux;
 
-      await fs.promises.writeFile(this.path, JSON.stringify(this.products));
-      console.log(`Se eliminó ${prod.title}`);
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(this.products, null, 4)
+      );
+      return `Se eliminó ${prod.title}`;
     } else {
-      console.log("Producto no encontrado");
+      return "Producto no encontrado";
     }
   }
 }
